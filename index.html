@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoFinder AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#090d18;color:#f4f6ff;font-family:Arial,sans-serif;min-height:100vh}
+header{height:75px;display:flex;align-items:center;justify-content:space-between;padding:0 7%;border-bottom:1px solid #20283b}
+.logo{font-size:25px;font-weight:bold;color:#72a7ff}
+.logo span{color:white}
+.header-label{color:#91a0bb;font-size:13px}
+main{max-width:850px;margin:65px auto;padding:20px}
+.intro{text-align:center;margin-bottom:40px}
+.intro h1{font-size:42px;margin-bottom:15px}
+.intro h1 span{color:#72a7ff}
+.intro p{color:#9ba8c0;line-height:1.6}
+.panel{background:#111a2b;border:1px solid #25334c;border-radius:17px;padding:27px;margin-bottom:20px}
+.panel h2{font-size:18px;margin-bottom:18px}
+.upload{display:block;border:2px dashed #354b70;border-radius:13px;padding:45px 15px;text-align:center;cursor:pointer;background:#0d1524}
+.upload:hover{border-color:#72a7ff;background:#14213a}
+.symbol{font-size:43px;margin-bottom:15px}
+.upload p{color:#aab7cd;font-size:14px;margin-top:9px}
+.upload input{display:none}
+#preview{display:none;max-width:100%;max-height:350px;border-radius:12px;margin:20px auto 0}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field label{display:block;margin-bottom:10px;font-size:14px;font-weight:bold}
+.field input{width:100%;padding:15px;border-radius:9px;border:1px solid #35445e;background:#0c1422;color:white;outline:none;font-size:14px}
+.field input:focus{border-color:#72a7ff}
+.field input::placeholder{color:#687991}
+.hint{color:#8291aa;font-size:12px;margin-top:15px}
+.analyze{width:100%;padding:17px;border:none;border-radius:10px;background:#3479ed;color:white;font-size:16px;font-weight:bold;cursor:pointer}
+.analyze:disabled{opacity:.45;cursor:not-allowed}
+#status{text-align:center;margin-top:18px;color:#91a8cc;font-size:13px;line-height:1.6}
+footer{text-align:center;padding:30px;color:#65738c;font-size:12px}
+@media(max-width:600px){.intro h1{font-size:32px}.field-grid{grid-template-columns:1fr}header{padding:0 5%}main{margin-top:35px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">GeoFinder <span>AI</span></div>
+<div class="header-label">AI Location Analysis</div>
+</header>
+<main>
+<section class="intro">
+<h1>Where was this <span>taken?</span></h1>
+<p>Lade ein Bild hoch und lass die KI mögliche Aufnahmeorte untersuchen.</p>
+</section>
+<section class="panel">
+<h2>01 – Bild hochladen</h2>
+<label class="upload" for="imageInput">
+<div class="symbol">📷</div>
+<strong>Bild auswählen</strong>
+<p>JPG, PNG oder WEBP</p>
+<input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp">
+<img id="preview" alt="Bildvorschau">
+</label>
+</section>
+<section class="panel">
+<h2>02 – Standort-Hinweise</h2>
+<div class="field-grid">
+<div class="field">
+<label for="country">Land (optional)</label>
+<input id="country" placeholder="z. B. Deutschland">
+</div>
+<div class="field">
+<label for="city">Stadt (optional)</label>
+<input id="city" placeholder="z. B. München">
+</div>
+</div>
+<p class="hint">Beide Felder können unabhängig voneinander ausgefüllt werden.</p>
+</section>
+<section class="panel">
+<h2>03 – Bild analysieren</h2>
+<button class="analyze" id="analyzeButton" disabled>✨ KI-Analyse starten</button>
+<div id="status">Bitte lade zuerst ein Bild hoch.</div>
+</section>
+</main>
+<footer>GeoFinder AI · Kostenlose Bildort-Analyse</footer>
+<script>
+const imageInput=document.getElementById("imageInput");
+const preview=document.getElementById("preview");
+const analyzeButton=document.getElementById("analyzeButton");
+const status=document.getElementById("status");
+let selectedImage=null;
+
+imageInput.addEventListener("change",function(){
+const file=this.files[0];
+if(!file)return;
+if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+status.textContent="Bitte wähle ein JPG-, PNG- oder WEBP-Bild.";
+this.value="";
+return;
+}
+if(file.size>15*1024*1024){
+status.textContent="Das Bild darf maximal 15 MB groß sein.";
+this.value="";
+return;
+}
+selectedImage=file;
+const reader=new FileReader();
+reader.onload=function(event){
+preview.src=event.target.result;
+preview.style.display="block";
+status.textContent="Bild erfolgreich ausgewählt.";
+analyzeButton.disabled=false;
+};
+reader.readAsDataURL(file);
+});
+
+analyzeButton.addEventListener("click",function(){
+if(!selectedImage)return;
+status.textContent="Die KI-Analyse wird im nächsten Entwicklungsschritt integriert.";
+});
+</script>
+</body>
+</html>
